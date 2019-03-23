@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfserving-client
+  labels:
+    app: tfserving-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tfserving-client
+  template:
+    metadata:
+      labels:
+        app: tfserving-client
+    spec:
+      containers:
+      - name: client
+        image: ncy9371/tfserving:client
+        env:
+        - name: server
+          value: 'tfserving-masked:8500'
+        command: ["python3", "/client.py"]
+        ports:
+        - containerPort: 80
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: tfserving-client
+spec:
+  type: NodePort
+  selector:
+    app: tfserving-client
+  ports:
+  - protocol: TCP
+    name: client
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+

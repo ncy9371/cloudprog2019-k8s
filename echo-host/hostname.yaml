@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-hostname
+  labels:
+    app: hostname
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hostname
+  template:
+    metadata:
+      labels:
+        app: hostname
+    spec:
+      containers:
+      - name: httpserver
+        image: python:3-alpine3.9
+        command: ["sh", "-c"]
+        args: ["echo $(hostname) > index.html && \
+                python3 -m http.server"]
+        ports:
+        - containerPort: 8000
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: echo-hostname
+spec:
+  type: NodePort
+  selector:
+    app: hostname
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30080
+    targetPort: 8000
+

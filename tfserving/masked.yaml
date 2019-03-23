@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfserving-masked
+  labels:
+    app: tfserving
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tfserving
+  template:
+    metadata:
+      labels:
+        app: tfserving
+    spec:
+      containers:
+      - name: tfserving
+        image: ncy9371/tfserving:masked
+        ports:
+        - containerPort: 8500
+          name: grpc
+        - containerPort: 8501
+          name: restful
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: tfserving-masked
+spec:
+  type: ClusterIP
+  selector:
+    app: tfserving
+  ports:
+  - protocol: TCP
+    name: grpc
+    port: 8500
+    targetPort: 8500
+  - protocol: TCP
+    name: restful
+    port: 8501
+    targetPort: 8501
+
