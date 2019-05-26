@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: client
-        image: ncy9371/tfserving:client
+        image: {account_name}/tfserving:client
         env:
         - name: server
           value: 'tfserving-masked:8500'

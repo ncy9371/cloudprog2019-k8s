@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: tfserving
-        image: ncy9371/tfserving:masked
+        image: {account_name}/tfserving:masked
         ports:
         - containerPort: 8500
           name: grpc
